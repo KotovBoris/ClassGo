@@ -1,0 +1,220 @@
+# ============================================================================
+# DATA-API.yaml — файл для автоматизированной проверки решения (формат сдачи).
+# Описывает обязательные проверки основного сценария по REST API «ClassGo».
+#
+# ВНИМАНИЕ: параметры ниже валидны для демо-окружения, которое поднимается
+# командой `docker compose up --build` (см. README). ID (class_id, student_id,
+# culture_event_id, excursion_id) выдаёт сам API — см. поле `setup` сценариев.
+# ============================================================================
+version: "1.0"
+solution: "ClassGo — сервис организации школьных культурных выездов"
+team: "classgo"
+base_url: "http://localhost:8080"        # mini-app + nginx-прокси на backend
+backend_url: "http://localhost:8000"     # прямой адрес API ядра (Swagger: /docs)
+
+openapi:
+  json: "/openapi.json"
+  yaml: "artifacts/openapi.yaml"
+
+# ---------------------------------------------------------------------------
+# Подготовка данных (выполняется автотестом перед проверками).
+# Все ответы — JSON. Роли: teacher (организатор), parent (законный представитель).
+# Аутентификация в MVP не требуется (демо-окружение); в проде — MAX Bridge initData.
+# ---------------------------------------------------------------------------
+auth:
+  type: none
+  note: "Роли моделируются параметрами запроса; в продакшене — валидация initData MAX Bridge"
+
+setup:
+  - id: warmup
+    description: "Прогрев и проверка живости"
+    steps:
+      - GET /healthz
+
+  - id: resolve_class
+    description: "Получить демо-класс 8-Б (24 ученика) и событие каталога"
+    steps:
+      - GET /api/v1/classes
+      - GET /api/v1/culture-events?city=Казань&pushkin=true
+
+# ---------------------------------------------------------------------------
+# Обязательные проверки основной функциональности.
+# ---------------------------------------------------------------------------
+checks:
+  - id: health
+    description: "Сервис жив"
+    method: GET
+    path: /healthz
+    role: teacher
+    expected_status: [200]
+    expected_content_type: application/json
+    expected_fields: { status: "ok" }
+
+  - id: openapi_available
+    description: "Спецификация OpenAPI доступна"
+    method: GET
+    path: /openapi.json
+    role: teacher
+    expected_status: [200]
+    expected_content_type: application/json
+    expected_fields_present: [openapi, paths, info]
+
+  - id: meta_declares_mock
+    description: "Данные явно помечены как модельные (п.10 ограничений)"
+    method: GET
+    path: /api/v1/meta
+    role: teacher
+    expected_status: [200]
+    expected_fields: { "dataset.is_mock": true }
+
+  - id: catalog_list
+    description: "Каталог событий по «Пушкинской карте»"
+    method: GET
+    path: /api/v1/culture-events?pushkin=true
+    role: teacher
+    expected_status: [200]
+    expected_type: array
+    expected_item_fields: [id, title, venue, city, age_rating, price, pushkin_eligible, source]
+
+  - id: live_dummy
+    description: "Dummy для доказуемости, что идут реальные данные-мок не пустой"
+    method: GET
+    path: /api/v1/culture-events
+    role: teacher
+    expected_status: [200]
+    expected_min_items: 15
+
+  - id: class_roster
+    description: "Состав класса (ученики + телефоны родителей)"
+    method: GET
+    path: /api/v1/classes/{class_id}/roster
+    role: teacher
+    path_params: { class_id: "${class_id}" }
+    expected_status: [200, 404]
+    expected_fields_present: [id, title, students]
+
+  - id: create_excursion
+    description: "Создание выезда по событию (UC-2/UC-3)"
+    method: POST
+    path: /api/v1/excursions
+    role: teacher
+    request_body:
+      class_id: "${class_id}"
+      culture_event_id: "${culture_event_id}"
+      gathering_time: "08:30"
+      return_time: "14:00"
+    expected_status: [201]
+    expected_fields_present: [id, title, status, ticket_price, is_pushkin_card]
+
+  - id: dashboard
+    description: "Дашборд «Сводка ответов» (UC-6)"
+    method: GET
+    path: /api/v1/excursions/{excursion_id}/dashboard
+    role: teacher
+    path_params: { excursion_id: "${excursion_id}" }
+    expected_status: [200]
+    expected_fields_present: [excursion, summary, progress_percent, participants]
+    expected_fields: { "summary.GREEN": 0, "summary.YELLOW": 0, "summary.GREY": 0, "summary.RED": 0 }
+
+  - id: consent_approve
+    description: "Фиксация согласия родителя (UC-4)"
+    method: POST
+    path: /api/v1/excursions/{excursion_id}/consent
+    role: parent
+    path_params: { excursion_id: "${excursion_id}" }
+    request_body:
+      student_id: "${student_id}"
+      status: "APPROVED"
+      parent_name: "Мама"
+      parent_phone: "+79001234501"
+    expected_status: [200]
+    expected_fields: { consent_status: "APPROVED" }
+
+  - id: consent_idempotent
+    description: "Повторное согласие не перезаписывает статус (правило двух родителей)"
+    method: POST
+    path: /api/v1/excursions/{excursion_id}/consent
+    role: parent
+    path_params: { excursion_id: "${excursion_id}" }
+    request_body: { student_id: "${student_id}", status: "REJECTED" }
+    expected_status: [200]
+    expected_fields: { consent_status: "APPROVED", changed: false }
+
+  - id: ticket_confirm
+    description: "Отметка «билет куплен» (UC-5)"
+    method: POST
+    path: /api/v1/excursions/{excursion_id}/ticket-confirm
+    role: parent
+    path_params: { excursion_id: "${excursion_id}" }
+    request_body: { student_id: "${student_id}", ticket_number: "KZ-0001" }
+    expected_status: [200]
+    expected_fields: { ticket_status: "PAID" }
+
+  - id: remind
+    description: "Точечные напоминания не ответившим (UC-6)"
+    method: POST
+    path: /api/v1/excursions/{excursion_id}/remind-unconfirmed
+    role: teacher
+    path_params: { excursion_id: "${excursion_id}" }
+    expected_status: [200]
+    expected_fields_present: [targeted, delivered]
+
+  - id: export_order_docx
+    description: "Генерация и выгрузка приказа DOCX (UC-7)"
+    method: GET
+    path: /api/v1/excursions/{excursion_id}/export-order?fmt=docx
+    role: teacher
+    path_params: { excursion_id: "${excursion_id}" }
+    expected_status: [200]
+    expected_content_type: application/vnd.openxmlformats-officedocument.wordprocessingml.document
+    expected_signature: "PK"
+
+  - id: export_order_pdf
+    description: "Генерация и выгрузка приказа PDF (UC-7)"
+    method: GET
+    path: /api/v1/excursions/{excursion_id}/export-order?fmt=pdf
+    role: teacher
+    path_params: { excursion_id: "${excursion_id}" }
+    expected_status: [200]
+    expected_content_type: application/pdf
+    expected_signature: "%PDF"
+
+  - id: link_code
+    description: "Диплинк привязки родителя к ученику"
+    method: POST
+    path: /api/v1/students/{student_id}/link-code
+    role: teacher
+    path_params: { student_id: "${student_id}" }
+    expected_status: [200]
+    expected_fields_present: [code, deep_link]
+
+  - id: error_404_excursion
+    description: "Обработка ошибки: несуществующий выезд"
+    method: POST
+    path: /api/v1/excursions/999999/consent
+    role: parent
+    request_body: { student_id: 1, status: "APPROVED" }
+    expected_status: [404]
+
+  - id: error_422_bad_status
+    description: "Обработка ошибки: недопустимый статус согласия"
+    method: POST
+    path: /api/v1/excursions/{excursion_id}/consent
+    role: parent
+    path_params: { excursion_id: "${excursion_id}" }
+    request_body: { student_id: "${student_id}", status: "MAYBE" }
+    expected_status: [422]
+
+  - id: webhook_accepts_update
+    description: "Приём обновлений MAX (production-канал)"
+    method: POST
+    path: /webhook/max
+    role: teacher
+    request_body:
+      update_type: "bot_started"
+      timestamp: 1
+      chat_id: 1
+      user: { user_id: 1 }
+      payload: null
+    expected_status: [200]
+    expected_fields: { ok: true }

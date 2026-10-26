@@ -1,0 +1,24 @@
+/* Golos Text (variable) — единственная гарнитура интерфейса.
+   Две роли закрываются одним семейством: текст и числа (tabular-nums).
+   Отдельный моно-шрифт убран осознанно: «моно для мелких данных» — типовой
+   признак сгенерированного интерфейса; выравнивание разрядов даёт font-variant-numeric.
+   Скачаны только кириллические сабсеты (латиница безопасно подставится системной). */
+
+/* cyrillic */
+@font-face {
+  font-family: "Golos Text";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/golos-text-400-cy.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116, U+2018-201D, U+2013-2014, U+00AB, U+00BB, U+0492, U+0496, U+049A, U+04A2, U+04AE, U+04B0, U+04B2, U+04B6, U+04B8, U+04BA, U+04BC, U+04BE, U+04C0, U+04C2, U+04C4, U+04C6, U+04C8, U+04CC, U+04D0-U+04D3, U+04D6, U+04D8, U+04DC, U+04E2, U+04E8, U+04EE-U+04F3, U+04F6, U+04F8;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: "Golos Text";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/golos-text-400-cye.woff2") format("woff2");
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}

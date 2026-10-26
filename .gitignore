@@ -1,0 +1,21 @@
+# Секреты и локальные артефакты — НИКОГДА не коммитим
+.env
+.env.local
+*.db
+data/
+node_modules/
+dist/
+.venv313/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+artifacts/generated/
+
+# Полноразмерные скриншоты UI-харнесса (лёгкие версии — в docs/screenshots/)
+artifacts/ui/
+
+# Дубли variable-font сабсетов (не нужны: один файл покрывает все веса)
+*.dup
+.claude/

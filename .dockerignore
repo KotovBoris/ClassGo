@@ -1,0 +1,9 @@
+.git
+**/.venv
+**/.venv313
+**/node_modules
+**/__pycache__
+**/.pytest_cache
+**/*.db
+.env
+.env.local

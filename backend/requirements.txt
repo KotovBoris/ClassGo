@@ -1,0 +1,20 @@
+# Зависимости backend. Версии зафиксированы.
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+sqlmodel==0.0.22
+# Пин: SQLAlchemy 2.0.36+ ломает резолвинг строковых аннотаций связей в SQLModel 0.0.22
+sqlalchemy==2.0.35
+pydantic-settings==2.7.1
+python-multipart==0.0.20
+httpx==0.28.1
+python-docx==1.1.2
+reportlab==4.2.5
+openpyxl==3.1.5
+# База часовых поясов для zoneinfo (на Windows и в slim-образах её может не быть)
+tzdata==2025.2
+# тесты (включены для воспроизводимой самопроверки решения одной командой)
+pytest==8.3.4
+pytest-asyncio==0.25.2
+pypdf==6.21.2
+# Драйвер PostgreSQL для профиля compose "postgres" (по умолчанию SQLite)
+psycopg2-binary==2.9.10

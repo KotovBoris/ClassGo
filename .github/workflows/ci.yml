@@ -1,0 +1,52 @@
+name: CI
+
+# Прогоняет тесты на каждый push и PR: backend (pytest), frontend (vitest),
+# сквозной сценарий бота через эмулятор протокола MAX.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  backend:
+    name: Backend (pytest)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt
+      - name: Tests
+        working-directory: backend
+        run: python -m pytest -p no:warnings
+
+  frontend:
+    name: Frontend (vitest)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        working-directory: miniapp
+        run: npm install --no-audit --no-fund
+      - name: Tests
+        working-directory: miniapp
+        run: npm test
+
+  agent-e2e:
+    name: Agent E2E (MAX-эмулятор)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt
+      - name: Run E2E over emulated MAX protocol
+        run: python scripts/e2e_agent.py

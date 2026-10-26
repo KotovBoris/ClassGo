@@ -1,0 +1,66 @@
+{
+  "when": "2026-09-27T14:48:38.182Z",
+  "base": "http://localhost:8080",
+  "api": [
+    {
+      "name": "GET /api/v1/excursions",
+      "samples": 7,
+      "minMs": 4.3,
+      "medianMs": 5.6,
+      "p95Ms": 10.5,
+      "maxMs": 10.5
+    },
+    {
+      "name": "GET /api/v1/culture-events",
+      "samples": 7,
+      "minMs": 3.7,
+      "medianMs": 4.2,
+      "p95Ms": 5.1,
+      "maxMs": 5.1
+    },
+    {
+      "name": "GET /dashboard",
+      "samples": 7,
+      "minMs": 6.9,
+      "medianMs": 8,
+      "p95Ms": 9.9,
+      "maxMs": 9.9
+    },
+    {
+      "name": "POST /export-order",
+      "samples": 7,
+      "minMs": 2.9,
+      "medianMs": 3,
+      "p95Ms": 4.8,
+      "maxMs": 4.8
+    }
+  ],
+  "pages": [
+    {
+      "label": "teacher",
+      "url": "/",
+      "domContentLoadedMs": 155.9,
+      "loadMs": 155.9,
+      "requestStartMs": 4.3,
+      "lcpMs": 272.9,
+      "tbtMs": 0,
+      "cls": 0,
+      "jsTransferKb": 93,
+      "cssTransferKb": 3.6,
+      "jsRequests": 8
+    },
+    {
+      "label": "parent",
+      "url": "/?startapp=1",
+      "domContentLoadedMs": 66.9,
+      "loadMs": 66.9,
+      "requestStartMs": 1,
+      "lcpMs": 260.6,
+      "tbtMs": 27,
+      "cls": 0,
+      "jsTransferKb": 90.6,
+      "cssTransferKb": 3.6,
+      "jsRequests": 7
+    }
+  ]
+}

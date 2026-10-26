@@ -1,0 +1,3046 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ClassGo API",
+    "description": "Сервис организации школьных культурных выездов. Данные каталога — модельные (см. поле source), внешняя интеграция с PRO.Культура.РФ заглушена.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/healthz": {
+      "get": {
+        "tags": [
+          "service"
+        ],
+        "summary": "Healthz",
+        "operationId": "healthz_healthz_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Healthz Healthz Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/meta": {
+      "get": {
+        "tags": [
+          "service"
+        ],
+        "summary": "Meta",
+        "operationId": "meta_api_v1_meta_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Meta Api V1 Meta Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/culture-events": {
+      "get": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "List Culture Events",
+        "operationId": "list_culture_events_api_v1_culture_events_get",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "City"
+            }
+          },
+          {
+            "name": "age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Возрастной ценз: 0+, 6+, 12+, 16+",
+              "title": "Age"
+            },
+            "description": "Возрастной ценз: 0+, 6+, 12+, 16+"
+          },
+          {
+            "name": "pushkin",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pushkin"
+            }
+          },
+          {
+            "name": "free",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Free"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CultureEventOut"
+                  },
+                  "title": "Response List Culture Events Api V1 Culture Events Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/schools": {
+      "get": {
+        "tags": [
+          "schools"
+        ],
+        "summary": "List Schools",
+        "operationId": "list_schools_api_v1_schools_get",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Query"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SchoolOut"
+                  },
+                  "title": "Response List Schools Api V1 Schools Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "schools"
+        ],
+        "summary": "Create School",
+        "operationId": "create_school_api_v1_schools_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchoolCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchoolOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/schools/{school_id}/share": {
+      "post": {
+        "tags": [
+          "schools"
+        ],
+        "summary": "Share School",
+        "operationId": "share_school_api_v1_schools__school_id__share_post",
+        "parameters": [
+          {
+            "name": "school_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "School Id"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "User Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShareRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShareOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/classes/import": {
+      "post": {
+        "tags": [
+          "classes"
+        ],
+        "summary": "Import Class",
+        "operationId": "import_class_api_v1_classes_import_post",
+        "parameters": [
+          {
+            "name": "grade",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "8",
+              "title": "Grade"
+            }
+          },
+          {
+            "name": "letter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "А",
+              "title": "Letter"
+            }
+          },
+          {
+            "name": "school_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "School Id"
+            }
+          },
+          {
+            "name": "school_number",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "School Number"
+            }
+          },
+          {
+            "name": "school_name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "School Name"
+            }
+          },
+          {
+            "name": "teacher_name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Teacher Name"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "User Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_import_class_api_v1_classes_import_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/classes": {
+      "post": {
+        "tags": [
+          "classes"
+        ],
+        "summary": "Create Class",
+        "operationId": "create_class_api_v1_classes_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClassCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "classes"
+        ],
+        "summary": "List Classes",
+        "operationId": "list_classes_api_v1_classes_get",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "User Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClassOut"
+                  },
+                  "title": "Response List Classes Api V1 Classes Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/classes/{class_id}/roster": {
+      "get": {
+        "tags": [
+          "classes"
+        ],
+        "summary": "Class Roster",
+        "operationId": "class_roster_api_v1_classes__class_id__roster_get",
+        "parameters": [
+          {
+            "name": "class_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Class Id"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "User Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/classes/{class_id}": {
+      "patch": {
+        "tags": [
+          "classes"
+        ],
+        "summary": "Update Class",
+        "operationId": "update_class_api_v1_classes__class_id__patch",
+        "parameters": [
+          {
+            "name": "class_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Class Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClassUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/classes/{class_id}/students": {
+      "post": {
+        "tags": [
+          "classes"
+        ],
+        "summary": "Add Student",
+        "operationId": "add_student_api_v1_classes__class_id__students_post",
+        "parameters": [
+          {
+            "name": "class_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Class Id"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "User Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StudentCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudentOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/classes/{class_id}/students/{student_id}": {
+      "delete": {
+        "tags": [
+          "classes"
+        ],
+        "summary": "Remove Student",
+        "operationId": "remove_student_api_v1_classes__class_id__students__student_id__delete",
+        "parameters": [
+          {
+            "name": "class_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Class Id"
+            }
+          },
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Student Id"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "User Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Remove Student Api V1 Classes  Class Id  Students  Student Id  Delete"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/classes/{class_id}/share": {
+      "post": {
+        "tags": [
+          "classes"
+        ],
+        "summary": "Share Class",
+        "operationId": "share_class_api_v1_classes__class_id__share_post",
+        "parameters": [
+          {
+            "name": "class_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Class Id"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "User Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShareRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShareOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/excursions": {
+      "get": {
+        "tags": [
+          "excursions"
+        ],
+        "summary": "List Excursions",
+        "operationId": "list_excursions_api_v1_excursions_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ExcursionOut"
+                  },
+                  "type": "array",
+                  "title": "Response List Excursions Api V1 Excursions Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "excursions"
+        ],
+        "summary": "Create Excursion",
+        "operationId": "create_excursion_api_v1_excursions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExcursionCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExcursionOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/excursions/{excursion_id}": {
+      "get": {
+        "tags": [
+          "excursions"
+        ],
+        "summary": "Get Excursion",
+        "operationId": "get_excursion_api_v1_excursions__excursion_id__get",
+        "parameters": [
+          {
+            "name": "excursion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Excursion Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExcursionOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/excursions/{excursion_id}/dashboard": {
+      "get": {
+        "tags": [
+          "excursions"
+        ],
+        "summary": "Excursion Dashboard",
+        "operationId": "excursion_dashboard_api_v1_excursions__excursion_id__dashboard_get",
+        "parameters": [
+          {
+            "name": "excursion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Excursion Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/excursions/{excursion_id}/participants": {
+      "get": {
+        "tags": [
+          "excursions"
+        ],
+        "summary": "Excursion Participants",
+        "operationId": "excursion_participants_api_v1_excursions__excursion_id__participants_get",
+        "parameters": [
+          {
+            "name": "excursion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Excursion Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Excursion Participants Api V1 Excursions  Excursion Id  Participants Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/excursions/{excursion_id}/consent": {
+      "post": {
+        "tags": [
+          "consent"
+        ],
+        "summary": "Post Consent",
+        "operationId": "post_consent_api_v1_excursions__excursion_id__consent_post",
+        "parameters": [
+          {
+            "name": "excursion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Excursion Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/excursions/{excursion_id}/ticket-confirm": {
+      "post": {
+        "tags": [
+          "consent"
+        ],
+        "summary": "Post Ticket Confirm",
+        "operationId": "post_ticket_confirm_api_v1_excursions__excursion_id__ticket_confirm_post",
+        "parameters": [
+          {
+            "name": "excursion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Excursion Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TicketConfirmRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/excursions/{excursion_id}/remind-unconfirmed": {
+      "post": {
+        "tags": [
+          "consent"
+        ],
+        "summary": "Remind Unconfirmed",
+        "operationId": "remind_unconfirmed_api_v1_excursions__excursion_id__remind_unconfirmed_post",
+        "parameters": [
+          {
+            "name": "excursion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Excursion Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemindResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/excursions/{excursion_id}/publish": {
+      "post": {
+        "tags": [
+          "consent"
+        ],
+        "summary": "Publish Excursion",
+        "operationId": "publish_excursion_api_v1_excursions__excursion_id__publish_post",
+        "parameters": [
+          {
+            "name": "excursion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Excursion Id"
+            }
+          },
+          {
+            "name": "chat_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Chat Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Publish Excursion Api V1 Excursions  Excursion Id  Publish Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/excursions/{excursion_id}/tag-unactivated": {
+      "post": {
+        "tags": [
+          "consent"
+        ],
+        "summary": "Tag Unactivated",
+        "operationId": "tag_unactivated_api_v1_excursions__excursion_id__tag_unactivated_post",
+        "parameters": [
+          {
+            "name": "excursion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Excursion Id"
+            }
+          },
+          {
+            "name": "chat_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Chat Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Tag Unactivated Api V1 Excursions  Excursion Id  Tag Unactivated Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/excursions/{excursion_id}/export-order": {
+      "post": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Generate Order",
+        "operationId": "generate_order_api_v1_excursions__excursion_id__export_order_post",
+        "parameters": [
+          {
+            "name": "excursion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Excursion Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Download Order",
+        "operationId": "download_order_api_v1_excursions__excursion_id__export_order_get",
+        "parameters": [
+          {
+            "name": "excursion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Excursion Id"
+            }
+          },
+          {
+            "name": "fmt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^(docx|pdf)$",
+              "default": "docx",
+              "title": "Fmt"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/students/{student_id}/link-code": {
+      "post": {
+        "tags": [
+          "consent"
+        ],
+        "summary": "Create Link Code",
+        "operationId": "create_link_code_api_v1_students__student_id__link_code_post",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Student Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LinkCodeOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/parent/context": {
+      "get": {
+        "tags": [
+          "parent"
+        ],
+        "summary": "Parent Context",
+        "operationId": "parent_context_api_v1_parent_context_get",
+        "parameters": [
+          {
+            "name": "max_user_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "description": "MAX user_id родителя (после привязки)",
+              "title": "Max User Id"
+            },
+            "description": "MAX user_id родителя (после привязки)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Parent Context Api V1 Parent Context Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/parent/confirm-link": {
+      "post": {
+        "tags": [
+          "parent"
+        ],
+        "summary": "Parent Confirm Link",
+        "operationId": "parent_confirm_link_api_v1_parent_confirm_link_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParentLinkAction"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Parent Confirm Link Api V1 Parent Confirm Link Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/parent/notifications": {
+      "post": {
+        "tags": [
+          "parent"
+        ],
+        "summary": "Parent Notifications",
+        "operationId": "parent_notifications_api_v1_parent_notifications_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotificationsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Parent Notifications Api V1 Parent Notifications Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/max/validate-init-data": {
+      "post": {
+        "tags": [
+          "max"
+        ],
+        "summary": "Validate Init Data",
+        "operationId": "validate_init_data_api_v1_max_validate_init_data_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "type": "object",
+                "title": "Payload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Validate Init Data Api V1 Max Validate Init Data Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/reset-demo": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "Reset Demo",
+        "operationId": "reset_demo_api_v1_admin_reset_demo_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Reset Demo Api V1 Admin Reset Demo Post"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhook/max": {
+      "post": {
+        "tags": [
+          "max"
+        ],
+        "summary": "Max Webhook",
+        "operationId": "max_webhook_webhook_max_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AccessRole": {
+        "type": "string",
+        "enum": [
+          "OWNER",
+          "EDIT",
+          "READ"
+        ],
+        "title": "AccessRole"
+      },
+      "Body_import_class_api_v1_classes_import_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_import_class_api_v1_classes_import_post"
+      },
+      "ClassCreate": {
+        "properties": {
+          "grade": {
+            "type": "string",
+            "title": "Grade"
+          },
+          "letter": {
+            "type": "string",
+            "title": "Letter",
+            "default": ""
+          },
+          "school_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "School Id"
+          },
+          "school_name": {
+            "type": "string",
+            "title": "School Name",
+            "default": ""
+          },
+          "school_number": {
+            "type": "string",
+            "title": "School Number",
+            "default": ""
+          },
+          "teacher_name": {
+            "type": "string",
+            "title": "Teacher Name",
+            "default": ""
+          },
+          "chat_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chat Id"
+          },
+          "user_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Id"
+          },
+          "students": {
+            "items": {
+              "$ref": "#/components/schemas/StudentCreate"
+            },
+            "type": "array",
+            "title": "Students"
+          }
+        },
+        "type": "object",
+        "required": [
+          "grade"
+        ],
+        "title": "ClassCreate"
+      },
+      "ClassOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "school_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "School Id"
+          },
+          "school_number": {
+            "type": "string",
+            "title": "School Number"
+          },
+          "school_name": {
+            "type": "string",
+            "title": "School Name"
+          },
+          "teacher_name": {
+            "type": "string",
+            "title": "Teacher Name"
+          },
+          "chat_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chat Id"
+          },
+          "owner_user_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Owner User Id"
+          },
+          "can_edit": {
+            "type": "boolean",
+            "title": "Can Edit",
+            "default": true
+          },
+          "students": {
+            "items": {
+              "$ref": "#/components/schemas/StudentOut"
+            },
+            "type": "array",
+            "title": "Students"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "school_number",
+          "school_name",
+          "teacher_name"
+        ],
+        "title": "ClassOut"
+      },
+      "ClassUpdate": {
+        "properties": {
+          "grade": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grade"
+          },
+          "letter": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Letter"
+          },
+          "school_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "School Id"
+          },
+          "teacher_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Teacher Name"
+          },
+          "chat_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chat Id"
+          },
+          "user_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Id"
+          }
+        },
+        "type": "object",
+        "title": "ClassUpdate"
+      },
+      "ConsentRequest": {
+        "properties": {
+          "student_id": {
+            "type": "integer",
+            "title": "Student Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "APPROVED",
+              "REJECTED"
+            ],
+            "title": "Status"
+          },
+          "parent_phone": {
+            "type": "string",
+            "title": "Parent Phone",
+            "default": ""
+          },
+          "parent_name": {
+            "type": "string",
+            "title": "Parent Name",
+            "default": ""
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "default": "miniapp"
+          },
+          "max_user_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max User Id"
+          },
+          "init_data": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Init Data"
+          }
+        },
+        "type": "object",
+        "required": [
+          "student_id",
+          "status"
+        ],
+        "title": "ConsentRequest"
+      },
+      "ConsentResponse": {
+        "properties": {
+          "student_id": {
+            "type": "integer",
+            "title": "Student Id"
+          },
+          "consent_status": {
+            "$ref": "#/components/schemas/ConsentStatus"
+          },
+          "ticket_status": {
+            "$ref": "#/components/schemas/TicketStatus"
+          },
+          "changed": {
+            "type": "boolean",
+            "title": "Changed"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "signed_by_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Signed By Name"
+          },
+          "signed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Signed At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "student_id",
+          "consent_status",
+          "ticket_status",
+          "changed",
+          "message"
+        ],
+        "title": "ConsentResponse"
+      },
+      "ConsentStatus": {
+        "type": "string",
+        "enum": [
+          "PENDING",
+          "APPROVED",
+          "REJECTED"
+        ],
+        "title": "ConsentStatus"
+      },
+      "CultureEventOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "venue": {
+            "type": "string",
+            "title": "Venue"
+          },
+          "city": {
+            "type": "string",
+            "title": "City"
+          },
+          "age_rating": {
+            "type": "string",
+            "title": "Age Rating"
+          },
+          "event_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Event Date"
+          },
+          "duration_min": {
+            "type": "integer",
+            "title": "Duration Min"
+          },
+          "price": {
+            "type": "number",
+            "title": "Price"
+          },
+          "pushkin_eligible": {
+            "type": "boolean",
+            "title": "Pushkin Eligible"
+          },
+          "is_free": {
+            "type": "boolean",
+            "title": "Is Free"
+          },
+          "ticket_url": {
+            "type": "string",
+            "title": "Ticket Url"
+          },
+          "address": {
+            "type": "string",
+            "title": "Address"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "venue",
+          "city",
+          "age_rating",
+          "event_date",
+          "duration_min",
+          "price",
+          "pushkin_eligible",
+          "is_free",
+          "ticket_url",
+          "address",
+          "description",
+          "source"
+        ],
+        "title": "CultureEventOut"
+      },
+      "DashboardOut": {
+        "properties": {
+          "excursion": {
+            "$ref": "#/components/schemas/ExcursionOut"
+          },
+          "summary": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Summary"
+          },
+          "progress_percent": {
+            "type": "integer",
+            "title": "Progress Percent"
+          },
+          "participants": {
+            "items": {
+              "$ref": "#/components/schemas/ParticipantRow"
+            },
+            "type": "array",
+            "title": "Participants"
+          }
+        },
+        "type": "object",
+        "required": [
+          "excursion",
+          "summary",
+          "progress_percent",
+          "participants"
+        ],
+        "title": "DashboardOut"
+      },
+      "DocumentOut": {
+        "properties": {
+          "excursion_id": {
+            "type": "integer",
+            "title": "Excursion Id"
+          },
+          "docx_url": {
+            "type": "string",
+            "title": "Docx Url"
+          },
+          "pdf_url": {
+            "type": "string",
+            "title": "Pdf Url"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Generated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "excursion_id",
+          "docx_url",
+          "pdf_url",
+          "version",
+          "generated_at"
+        ],
+        "title": "DocumentOut"
+      },
+      "ExcursionCreate": {
+        "properties": {
+          "class_id": {
+            "type": "integer",
+            "title": "Class Id"
+          },
+          "culture_event_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Culture Event Id"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "location_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location Name"
+          },
+          "address": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Address"
+          },
+          "event_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Event Date"
+          },
+          "gathering_time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gathering Time"
+          },
+          "return_time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Return Time"
+          },
+          "deadline": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deadline"
+          },
+          "ticket_price": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ticket Price"
+          },
+          "ticket_sale_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ticket Sale Url"
+          },
+          "is_pushkin_card": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Pushkin Card"
+          },
+          "order_basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Order Basis"
+          }
+        },
+        "type": "object",
+        "required": [
+          "class_id"
+        ],
+        "title": "ExcursionCreate"
+      },
+      "ExcursionOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "class_id": {
+            "type": "integer",
+            "title": "Class Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "location_name": {
+            "type": "string",
+            "title": "Location Name"
+          },
+          "address": {
+            "type": "string",
+            "title": "Address"
+          },
+          "event_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Event Date"
+          },
+          "gathering_time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gathering Time"
+          },
+          "return_time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Return Time"
+          },
+          "deadline": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deadline"
+          },
+          "ticket_price": {
+            "type": "number",
+            "title": "Ticket Price"
+          },
+          "ticket_sale_url": {
+            "type": "string",
+            "title": "Ticket Sale Url"
+          },
+          "is_pushkin_card": {
+            "type": "boolean",
+            "title": "Is Pushkin Card"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ExcursionStatus"
+          },
+          "school_name": {
+            "type": "string",
+            "title": "School Name"
+          },
+          "responsible_teacher": {
+            "type": "string",
+            "title": "Responsible Teacher"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "class_id",
+          "title",
+          "location_name",
+          "address",
+          "event_date",
+          "gathering_time",
+          "return_time",
+          "deadline",
+          "ticket_price",
+          "ticket_sale_url",
+          "is_pushkin_card",
+          "status",
+          "school_name",
+          "responsible_teacher"
+        ],
+        "title": "ExcursionOut"
+      },
+      "ExcursionStatus": {
+        "type": "string",
+        "enum": [
+          "DRAFT",
+          "VOTING",
+          "CLOSED"
+        ],
+        "title": "ExcursionStatus"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ImportResult": {
+        "properties": {
+          "class_id": {
+            "type": "integer",
+            "title": "Class Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "students_created": {
+            "type": "integer",
+            "title": "Students Created"
+          },
+          "parents_created": {
+            "type": "integer",
+            "title": "Parents Created"
+          },
+          "skipped_rows": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Skipped Rows"
+          }
+        },
+        "type": "object",
+        "required": [
+          "class_id",
+          "title",
+          "students_created",
+          "parents_created"
+        ],
+        "title": "ImportResult"
+      },
+      "LinkCodeOut": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "deep_link": {
+            "type": "string",
+            "title": "Deep Link"
+          },
+          "student_id": {
+            "type": "integer",
+            "title": "Student Id"
+          },
+          "expires_in_min": {
+            "type": "integer",
+            "title": "Expires In Min",
+            "default": 60
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "deep_link",
+          "student_id"
+        ],
+        "title": "LinkCodeOut"
+      },
+      "NotificationsRequest": {
+        "properties": {
+          "max_user_id": {
+            "type": "integer",
+            "title": "Max User Id"
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          }
+        },
+        "type": "object",
+        "required": [
+          "max_user_id",
+          "enabled"
+        ],
+        "title": "NotificationsRequest"
+      },
+      "ParentLinkAction": {
+        "properties": {
+          "student_id": {
+            "type": "integer",
+            "title": "Student Id"
+          },
+          "max_user_id": {
+            "type": "integer",
+            "title": "Max User Id"
+          },
+          "accept": {
+            "type": "boolean",
+            "title": "Accept",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "student_id",
+          "max_user_id"
+        ],
+        "title": "ParentLinkAction"
+      },
+      "ParentOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "full_name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "phone_number": {
+            "type": "string",
+            "title": "Phone Number"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "confirmed": {
+            "type": "boolean",
+            "title": "Confirmed"
+          },
+          "bot_activated": {
+            "type": "boolean",
+            "title": "Bot Activated"
+          },
+          "notifications_enabled": {
+            "type": "boolean",
+            "title": "Notifications Enabled"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "full_name",
+          "phone_number",
+          "role",
+          "confirmed",
+          "bot_activated",
+          "notifications_enabled"
+        ],
+        "title": "ParentOut"
+      },
+      "ParticipantRow": {
+        "properties": {
+          "student_id": {
+            "type": "integer",
+            "title": "Student Id"
+          },
+          "full_name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "traffic_light": {
+            "$ref": "#/components/schemas/TrafficLight"
+          },
+          "consent_status": {
+            "$ref": "#/components/schemas/ConsentStatus"
+          },
+          "ticket_status": {
+            "$ref": "#/components/schemas/TicketStatus"
+          },
+          "bot_activated": {
+            "type": "boolean",
+            "title": "Bot Activated",
+            "default": false
+          },
+          "parent_status": {
+            "type": "string",
+            "enum": [
+              "APPROVED",
+              "REJECTED",
+              "NO_ANSWER",
+              "BOT_INACTIVE"
+            ],
+            "title": "Parent Status",
+            "default": "NO_ANSWER"
+          },
+          "signed_by_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Signed By Name"
+          },
+          "signed_by_phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Signed By Phone"
+          },
+          "signed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Signed At"
+          },
+          "rejection_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rejection Reason"
+          },
+          "ticket_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ticket Number"
+          }
+        },
+        "type": "object",
+        "required": [
+          "student_id",
+          "full_name",
+          "traffic_light",
+          "consent_status",
+          "ticket_status"
+        ],
+        "title": "ParticipantRow"
+      },
+      "RemindResponse": {
+        "properties": {
+          "targeted": {
+            "type": "integer",
+            "title": "Targeted"
+          },
+          "delivered": {
+            "type": "integer",
+            "title": "Delivered"
+          },
+          "recipients": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Recipients"
+          }
+        },
+        "type": "object",
+        "required": [
+          "targeted",
+          "delivered"
+        ],
+        "title": "RemindResponse"
+      },
+      "SchoolCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "city": {
+            "type": "string",
+            "title": "City",
+            "default": ""
+          },
+          "number": {
+            "type": "string",
+            "title": "Number",
+            "default": ""
+          },
+          "user_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "SchoolCreate"
+      },
+      "SchoolOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "city": {
+            "type": "string",
+            "title": "City"
+          },
+          "number": {
+            "type": "string",
+            "title": "Number"
+          },
+          "owner_user_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Owner User Id"
+          },
+          "classes_count": {
+            "type": "integer",
+            "title": "Classes Count",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "city",
+          "number"
+        ],
+        "title": "SchoolOut"
+      },
+      "ShareOut": {
+        "properties": {
+          "user_id": {
+            "type": "integer",
+            "title": "User Id"
+          },
+          "role": {
+            "$ref": "#/components/schemas/AccessRole"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "role"
+        ],
+        "title": "ShareOut"
+      },
+      "ShareRequest": {
+        "properties": {
+          "user_id": {
+            "type": "integer",
+            "title": "User Id"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "EDIT",
+              "READ"
+            ],
+            "title": "Role",
+            "default": "READ"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id"
+        ],
+        "title": "ShareRequest"
+      },
+      "StudentCreate": {
+        "properties": {
+          "full_name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "birth_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Birth Date"
+          },
+          "parent_phone": {
+            "type": "string",
+            "title": "Parent Phone",
+            "default": ""
+          },
+          "parent_name": {
+            "type": "string",
+            "title": "Parent Name",
+            "default": ""
+          },
+          "parent_role": {
+            "type": "string",
+            "title": "Parent Role",
+            "default": "Законный представитель"
+          }
+        },
+        "type": "object",
+        "required": [
+          "full_name"
+        ],
+        "title": "StudentCreate"
+      },
+      "StudentOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "full_name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "birth_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Birth Date"
+          },
+          "parent_phones": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Parent Phones"
+          },
+          "parents": {
+            "items": {
+              "$ref": "#/components/schemas/ParentOut"
+            },
+            "type": "array",
+            "title": "Parents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "full_name",
+          "birth_date"
+        ],
+        "title": "StudentOut"
+      },
+      "TicketConfirmRequest": {
+        "properties": {
+          "student_id": {
+            "type": "integer",
+            "title": "Student Id"
+          },
+          "ticket_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ticket Number"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "default": "miniapp"
+          },
+          "init_data": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Init Data"
+          }
+        },
+        "type": "object",
+        "required": [
+          "student_id"
+        ],
+        "title": "TicketConfirmRequest"
+      },
+      "TicketStatus": {
+        "type": "string",
+        "enum": [
+          "NOT_REQUIRED",
+          "WAITING_PAYMENT",
+          "PAID"
+        ],
+        "title": "TicketStatus"
+      },
+      "TrafficLight": {
+        "type": "string",
+        "enum": [
+          "GREEN",
+          "YELLOW",
+          "GREY",
+          "RED"
+        ],
+        "title": "TrafficLight"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
